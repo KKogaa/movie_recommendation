@@ -1,0 +1,6 @@
+2021-12-22 04:20:30,585 INFO werkzeug MainThread :  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2021-12-22 04:21:05,088 ERROR app Thread-1 : name 'db' is not defined
+2021-12-22 04:21:05,089 INFO werkzeug Thread-1 : 127.0.0.1 - - [22/Dec/2021 04:21:05] "[35m[1mPOST /api/movies HTTP/1.1[0m" 500 -
+2021-12-22 04:27:33,554 INFO werkzeug MainThread :  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2021-12-22 04:27:34,840 ERROR app Thread-1 : name 'db' is not defined
+2021-12-22 04:27:34,842 INFO werkzeug Thread-1 : 127.0.0.1 - - [22/Dec/2021 04:27:34] "[35m[1mPOST /api/movies HTTP/1.1[0m" 500 -
