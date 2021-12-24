@@ -15,14 +15,14 @@ data_resp = MovieDto.data_resp
 
 
 @api.route("")
-class MovieGet(Resource):
-    # @api.doc(
-    #     "Get a specific user",
-    #     responses={
-    #         200: ("User data successfully sent", data_resp),
-    #         404: "User not found!",
-    #     },
-    # )
+class Movie(Resource):
+    @api.doc(
+        "Get a specific user",
+        responses={
+            200: ("Movie data successfully sent", data_resp),
+            404: "Movie not found!",
+        },
+    )
     def get(self):
         """ Get a specific user's data by their username """
         return MovieService.get_all_movies()

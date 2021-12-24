@@ -3,6 +3,7 @@ from flask import current_app
 from app import db
 from app.utils import err_resp, message, internal_err_resp
 from app.models.movie import Movie
+from app.models.genre import Genre
 
 from app.models.schemas import MovieSchema
 
@@ -31,18 +32,17 @@ class MovieService:
 
     @staticmethod
     def save_movie(data):
-        # Assign vars
-
         # Required values
         title = data["title"]
-        genres = data["genres"]
-        print(genres)
+        genres = data.get("genres")
 
         try:
             new_movie = Movie(
                 title=title
-                # genres=genres
             )
+            for id_genre in genres:
+                if obj := Genre.query.filter_by(id=id_genre).first():
+                    new_movie.genres.append(obj)
 
             db.session.add(new_movie)
             db.session.flush()
@@ -57,6 +57,70 @@ class MovieService:
             resp["movie"] = movie_info
 
             return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_movie(movie_id):
+        if not (movie := Movie.query.get(movie_id)):
+            return err_resp("Movie not found!", "movie_404", 404)
+
+        from .utils import load_data
+
+        try:
+            movie_info = load_data(movie)
+
+            resp = message(True, "Movie data sent")
+            resp["movie"] = movie_info
+            return resp, 200
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def update_movie(movie_id, data):
+        if not (movie := Movie.query.get(movie_id)):
+            return err_resp("Movie not found!", "movie_404", 404)
+
+        # Required values
+        title = data["title"]
+
+        try:
+            movie.title = title
+
+            db.session.add(movie)
+            db.session.flush()
+
+            # Load the new movie info
+            movie_info = movie_schema.dump(movie)
+
+            # Commit changes to DB
+            db.session.commit()
+
+            resp = message(True, "Movie has successfully been updated")
+            resp["movie"] = movie_info
+
+            return resp, 200
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def delete_movie(movie_id):
+        if not (movie := Movie.query.get(movie_id)):
+            return err_resp("Movie not found!", "movie_404", 404)
+
+        try:
+            db.session.delete(movie)
+            db.session.flush()
+            db.session.commit()
+
+            resp = message(True, "Movie has successfully been deleted")
+            return resp, 200
 
         except Exception as error:
             current_app.logger.error(error)
