@@ -17,10 +17,27 @@ class Config:
 
 
 class DevelopmentConfig(Config):
+
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL", "sqlite:///" + os.path.join(basedir, "data-dev.sqlite")
-    )
+
+    if os.getenv("DB_ENGINE") == "postgres":
+        DB_USER = os.environ.get("DB_USER")
+        DB_PASSWORD = os.environ.get("DB_PASSWORD")
+        DB_HOST = os.environ.get("DB_HOST")
+        DB_DATABASE = os.environ.get("DB_DATABASE")
+
+        if not all([DB_USER, DB_PASSWORD, DB_HOST, DB_DATABASE]):
+            raise Exception('Missing database environment variables')
+
+        SQLALCHEMY_DATABASE_URI = 'postgresql://' + DB_USER + \
+            ':' + DB_PASSWORD + '@' + DB_HOST + '/' + DB_DATABASE
+
+    else:
+        SQLALCHEMY_DATABASE_URI = os.environ.get(
+            "DATABASE_URL", "sqlite:///" +
+            os.path.join(basedir, "data-dev.sqlite")
+        )
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Add logger

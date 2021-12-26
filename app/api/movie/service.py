@@ -4,9 +4,9 @@ from app import db
 from app.utils import err_resp, message, internal_err_resp
 from app.models.movie import Movie
 from app.models.genre import Genre
+import pandas as pd
 
 from app.models.schemas import MovieSchema
-
 movie_schema = MovieSchema()
 
 
@@ -121,6 +121,21 @@ class MovieService:
 
             resp = message(True, "Movie has successfully been deleted")
             return resp, 200
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def process_file(file):
+        print('Entro')
+        print(file.filename)
+
+        try:
+
+            # data = file.read().decode("utf-8")
+            # return data
+            return None
 
         except Exception as error:
             current_app.logger.error(error)

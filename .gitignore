@@ -4,3 +4,4 @@ migrations/
 .env
 *.sqlite
 env/
+docker-compose.yml

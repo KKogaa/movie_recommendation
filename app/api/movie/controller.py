@@ -38,3 +38,23 @@ class Movie(Resource):
         #     return validation_error(False, errors), 400
 
         return MovieService.save_movie(register_data)
+
+
+@api.route("/<int:movie_id>")
+class MovieId(Resource):
+
+    def get(self, movie_id):
+        return MovieService.get_movie(movie_id)
+
+    def delete(self, movie_id):
+        return MovieService.delete_movie(movie_id)
+
+    def put(self, movie_id):
+        return MovieService.update_movie(movie_id)
+
+
+@api.route("/upload")
+class MovieFile(Resource):
+    def post(self):
+        f = request.files['file']
+        return MovieService.process_file(f)
